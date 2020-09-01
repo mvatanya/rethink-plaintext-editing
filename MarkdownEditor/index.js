@@ -9,10 +9,6 @@ import 'react-markdown-editor-lite/lib/index.css';
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false
 });
-// import MdEditor from 'react-markdown-editor-lite'
-// import 'react-markdown-editor-lite/lib/index.css';
-
-
 
 // Initialize a markdown parser
 const mdParser = new MarkdownIt(/* Markdown-it options */);
@@ -60,14 +56,17 @@ function MarkdownEditor({ file, write }) {
 
   return (
     <div className={css.editor}>
-      {/* <h3>TODO</h3>
-      <i>text/markdown</i> */}
       <Editor file={file} write={write} />
     </div>
   );
 }
 
 MarkdownEditor.propTypes = {
+  file: PropTypes.object,
+  write: PropTypes.func
+};
+
+Editor.propTypes = {
   file: PropTypes.object,
   write: PropTypes.func
 };

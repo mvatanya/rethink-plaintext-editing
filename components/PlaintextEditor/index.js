@@ -12,13 +12,15 @@ function RichEditor({ readFile, file, write }) {
   const inputRef = useRef();
 
   const onChange = (editorState) => {
-    const contentStat2e = editorState.getCurrentContent();
-    const textFile = JSON.stringify(convertToRaw(contentStat2e));
-    // debugger
     setEditorState(editorState)
-    const newFile = new File([textFile], file.name, {
-      type: file.type,
-    });
+
+    //TODO: 
+    // const contentStat2e = editorState.getCurrentContent();
+    // const textFile = JSON.stringify(convertToRaw(contentStat2e));
+    
+    // const newFile = new File([textFile], file.name, {
+    //   type: file.type,
+    // });
 
     // write(newFile)
   }
@@ -191,8 +193,7 @@ function InlineStyleControls({ editorState,onToggle }){
       )}
     </div>
   );
-};
-
+}
 
 function PlaintextEditor({ file, write }) {
   const [isReadingFile, setIsReadingFile] = useState(true)
@@ -213,8 +214,6 @@ function PlaintextEditor({ file, write }) {
 
   return (
     <div className={css.editor}>
-      {/* <h3>TODO</h3>
-      <i>text/plain</i> */}
       <RichEditor readFile={readFile} file={file} write={write} />
     </div>
   );
@@ -227,6 +226,8 @@ PlaintextEditor.propTypes = {
 
 RichEditor.propTypes = {
   readFile: PropTypes.string,
+  file: PropTypes.object,
+  write: PropTypes.func,
 }
 
 StyleButton.propTypes = {
