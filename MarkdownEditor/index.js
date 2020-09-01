@@ -1,14 +1,68 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import MarkdownIt from 'markdown-it'
+import dynamic from 'next/dynamic';
 
 import css from "./style.css";
+import 'react-markdown-editor-lite/lib/index.css';
+
+const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
+  ssr: false
+});
+// import MdEditor from 'react-markdown-editor-lite'
+// import 'react-markdown-editor-lite/lib/index.css';
+
+
+
+// Initialize a markdown parser
+const mdParser = new MarkdownIt(/* Markdown-it options */);
+
+
+
+function Editor({ file, write }) {
+  const [isReadingFile, setIsReadingFile] = useState(true)
+  const [readFile, setReadFile] = useState('')
+
+  useEffect(() => {
+    let read = new FileReader();
+    read.readAsBinaryString(file);
+    read.onloadend = function () {
+      setIsReadingFile(false)
+      setReadFile(read.result)
+    }
+  }, [file])
+
+  const handleEditorChange = ({text}) => {
+    setReadFile(text);
+    const newFile = new File([text], file.name, {
+      type: file.type,
+    });
+
+    write(newFile)
+  }
+
+
+  if (isReadingFile) {
+    return (<div>loading...</div>)
+  }
+  return (
+    <MdEditor
+      value={readFile}
+      style={{ height: "500px" }}
+      renderHTML={(text) => mdParser.render(text)}
+      onChange={handleEditorChange}
+    />
+  )
+}
+
 
 function MarkdownEditor({ file, write }) {
-  console.log(file, write);
+
   return (
     <div className={css.editor}>
-      <h3>TODO</h3>
-      <i>text/markdown</i>
+      {/* <h3>TODO</h3>
+      <i>text/markdown</i> */}
+      <Editor file={file} write={write} />
     </div>
   );
 }

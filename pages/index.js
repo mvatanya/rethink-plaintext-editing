@@ -6,7 +6,6 @@ import classNames from "classnames";
 
 import { listFiles } from "../lib/list-files";
 
-// Used below, these need to be registered
 import MarkdownEditor from "../MarkdownEditor";
 import PlaintextEditor from "../components/PlaintextEditor";
 
@@ -99,8 +98,8 @@ Previewer.propTypes = {
 
 // Uncomment keys to register editors for media types
 const REGISTERED_EDITORS = {
-  // "text/plain": PlaintextEditor,
-  // "text/markdown": MarkdownEditor,
+  "text/plain": PlaintextEditor,
+  "text/markdown": MarkdownEditor,
 };
 
 function PlaintextFilesChallenge() {
@@ -108,21 +107,27 @@ function PlaintextFilesChallenge() {
   const [activeFile, setActiveFile] = useState(null);
 
   useEffect(() => {
+
     const files = listFiles();
     setFiles(files);
   }, []);
 
   const write = file => {
-    console.log("Writing... ", file.name);
+    const index = files.findIndex(f => f.name === file.name)
+    let filesShallowCopy = [...files];
+    filesShallowCopy[index] = file;
 
-    // TODO: Write the file to the `files` array
+    setFiles(filesShallowCopy);
   };
+
 
   const Editor = activeFile ? REGISTERED_EDITORS[activeFile.type] : null;
 
   return (
     <div className={css.page}>
       <Head>
+        <link rel='stylesheet' href='draft-stylesheet.css' />
+        <link rel='stylesheet' href='md-editor-stylesheet.css' />
         <title>Rethink Engineering Challenge</title>
       </Head>
       <aside>
